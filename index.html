@@ -6,6 +6,9 @@
 <title>Pixel Quest · La leyenda de Eldoria y el Eclipse</title>
 <meta name="description" content="Aventura de acción en pixel art. Explora Eldoria, vence a los guardianes y detén al Eclipse. Juega gratis en tu navegador.">
 <link rel="icon" href="img/icono.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#141c30">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
@@ -102,8 +105,12 @@
   .movil h4 { font-family: "Press Start 2P", monospace; font-size: 14px; color: var(--oro2); margin-bottom: 10px; }
 
   /* Descargas */
-  .descargas { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-  .desc-card { background: var(--panel); border: 3px solid var(--oro); padding: 30px; text-align: center; }
+  .descargas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .desc-card { position: relative; background: var(--panel); border: 3px solid #2b3a63; padding: 30px 24px; text-align: center; }
+  .desc-card.recomendado { border-color: var(--oro); box-shadow: 0 0 0 3px rgba(232,185,74,.25); }
+  .etiqueta { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--oro2); color: #2a1a06;
+              font-family: "Press Start 2P", monospace; font-size: 9px; padding: 6px 10px; border: 2px solid #2a1a06; white-space: nowrap; }
+  .estado { margin: 14px 0 0 !important; color: var(--crema) !important; font-size: 14px; min-height: 1em; }
   .desc-card.pronto { border-color: #2b3a63; }
   .desc-ico { font-size: 46px; margin-bottom: 8px; }
   .desc-card h4 { font-size: 16px; color: var(--oro2); margin-bottom: 8px; }
@@ -174,15 +181,28 @@
   <div class="wrap">
     <div class="titulo"><h3 class="pixel">DESCARGA EL JUEGO</h3><p>Juega sin internet, como una aplicación más de tu equipo.</p></div>
     <div class="descargas">
+      <div class="desc-card recomendado">
+        <span class="etiqueta">RECOMENDADO</span>
+        <div class="desc-ico">⭐</div>
+        <h4 class="pixel">INSTALAR LA APP</h4>
+        <p>PC, Mac, Chromebook y Android · sin avisos</p>
+        <button class="btn" id="instalar" type="button">⬇ INSTALAR EN TU EQUIPO</button>
+        <p class="estado" id="instalar-estado"></p>
+        <ol>
+          <li>Pulsa <b>INSTALAR</b> y acepta. Queda con su icono en el menú Inicio y en el escritorio.</li>
+          <li>Se abre en su propia ventana y, después de jugar una vez, funciona <b>sin internet</b>.</li>
+          <li>Se actualiza sola cada vez que hay versión nueva.</li>
+        </ol>
+      </div>
       <div class="desc-card">
         <div class="desc-ico">🖥️</div>
-        <h4 class="pixel">WINDOWS</h4>
-        <p>Windows 10 y 11 · 64 bits · 38 MB</p>
+        <h4 class="pixel">WINDOWS (.EXE)</h4>
+        <p>Windows 10 y 11 · 64 bits · 38 MB · sin firma digital todavía</p>
         <a class="btn" href="descargas/PixelQuest_Windows.zip" download>⬇ DESCARGAR</a>
         <ol>
           <li>Descomprime el archivo (clic derecho → <b>Extraer todo</b>).</li>
           <li>Abre <b>PixelQuest.exe</b>.</li>
-          <li>Si Windows avisa «Windows protegió su PC», pulsa <b>Más información → Ejecutar de todas formas</b>. Sale porque el juego es nuevo y aún no tiene firma digital.</li>
+          <li>Si Windows avisa «Windows protegió su PC», pulsa <b>Más información → Ejecutar de todas formas</b>. Sale porque el juego es nuevo y aún no tiene firma digital. Si tu Windows tiene activado «Control inteligente de aplicaciones», no dejará abrirlo: usa la opción <b>INSTALAR LA APP</b>.</li>
         </ol>
       </div>
       <div class="desc-card pronto">
@@ -266,6 +286,41 @@
 <script>
   // El juego solo se carga al pulsar COMENZAR, así la página abre rápido.
   const pantalla = document.getElementById('pantalla');
+  // Instalar como aplicación (PWA): sin descargar ningún .exe, sin avisos.
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+  const btnInstalar = document.getElementById('instalar');
+  const estadoInstalar = document.getElementById('instalar-estado');
+  let avisoInstalar = null;
+  const yaInstalada = matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    avisoInstalar = e;
+    estadoInstalar.textContent = 'Listo para instalar.';
+  });
+  window.addEventListener('appinstalled', () => {
+    avisoInstalar = null;
+    estadoInstalar.textContent = '¡Instalada! Búscala como «Pixel Quest» en tu menú de aplicaciones.';
+  });
+  btnInstalar.addEventListener('click', async () => {
+    if (yaInstalada) {
+      estadoInstalar.textContent = 'Ya la estás usando como aplicación.';
+      return;
+    }
+    if (avisoInstalar) {
+      avisoInstalar.prompt();
+      const r = await avisoInstalar.userChoice;
+      avisoInstalar = null;
+      estadoInstalar.textContent = r.outcome === 'accepted' ? '¡Instalando Pixel Quest!' : 'Instalación cancelada. Puedes volver a intentarlo cuando quieras.';
+      return;
+    }
+    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    estadoInstalar.textContent = ios
+      ? 'En iPhone/iPad: pulsa Compartir (cuadro con flecha) y luego «Añadir a pantalla de inicio».'
+      : 'Si no aparece la ventana, usa Chrome o Edge: menú ⋮ → «Instalar Pixel Quest» (o el icono de instalar en la barra de direcciones). Si ya la instalaste, búscala en tu menú de aplicaciones.';
+  });
+
   const tactil = matchMedia('(pointer: coarse)').matches;
   document.getElementById('cargar').addEventListener('click', () => {
     // En el celular el juego se abre en su propia pantalla, más grande.
