@@ -101,11 +101,22 @@
   .movil .ico { font-size: 56px; }
   .movil h4 { font-family: "Press Start 2P", monospace; font-size: 14px; color: var(--oro2); margin-bottom: 10px; }
 
+  /* Descargas */
+  .descargas { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .desc-card { background: var(--panel); border: 3px solid var(--oro); padding: 30px; text-align: center; }
+  .desc-card.pronto { border-color: #2b3a63; }
+  .desc-ico { font-size: 46px; margin-bottom: 8px; }
+  .desc-card h4 { font-size: 16px; color: var(--oro2); margin-bottom: 8px; }
+  .desc-card p { color: var(--gris); margin-bottom: 22px; }
+  .desc-card ol { text-align: left; margin: 26px 0 0 20px; font-size: 15px; display: grid; gap: 6px; }
+  .btn.desactivado { cursor: default; opacity: .6; font-size: 11px; }
+  .btn.desactivado:hover { transform: none; }
+
   footer { border-top: 4px solid var(--oro); padding: 36px 0; text-align: center; color: var(--gris); font-size: 14px; }
   footer .pixel { color: var(--crema); font-size: 11px; margin-bottom: 12px; }
 
   @media (max-width: 860px) {
-    .hero .wrap, .heroes { grid-template-columns: 1fr; }
+    .hero .wrap, .heroes, .descargas { grid-template-columns: 1fr; }
     .grid3 { grid-template-columns: 1fr 1fr; }
     .teclas { grid-template-columns: 1fr 1fr; }
     nav ul { display: none; }
@@ -120,6 +131,7 @@
     <a class="logo pixel" href="#"><img src="img/icono.png" alt="">PIXEL QUEST</a>
     <ul>
       <li><a class="l" href="#jugar">Jugar</a></li>
+      <li><a class="l" href="#descargar">Descargar</a></li>
       <li><a class="l" href="#mundo">El mundo</a></li>
       <li><a class="l" href="#heroes">Héroes</a></li>
       <li><a class="l" href="#controles">Controles</a></li>
@@ -137,7 +149,7 @@
       <p>El Eclipse amenaza el reino y solo un héroe puede devolver la luz. Explora aldeas vivas, vence a los guardianes y conquista los reinos del cielo y del infierno.</p>
       <div class="ctas">
         <a class="btn" href="#jugar">▶ JUGAR GRATIS</a>
-        <a class="btn sec" href="#mundo">VER MÁS</a>
+        <a class="btn sec" href="#descargar">⬇ DESCARGAR</a>
       </div>
       <div class="tags"><span class="tag">Gratis</span><span class="tag">En el navegador</span><span class="tag">8 héroes</span><span class="tag">PC y celular</span><span class="tag">En español</span></div>
     </div>
@@ -154,6 +166,34 @@
     <div class="bajo-juego">
       <span>Tu partida se guarda en este navegador (F5 dentro del juego).</span>
       <button class="btn sec" id="completa" style="font-size:11px;padding:12px 18px">⛶ PANTALLA COMPLETA</button>
+    </div>
+  </div>
+</section>
+
+<section id="descargar">
+  <div class="wrap">
+    <div class="titulo"><h3 class="pixel">DESCARGA EL JUEGO</h3><p>Juega sin internet, como una aplicación más de tu equipo.</p></div>
+    <div class="descargas">
+      <div class="desc-card">
+        <div class="desc-ico">🖥️</div>
+        <h4 class="pixel">WINDOWS</h4>
+        <p>Windows 10 y 11 · 64 bits · 38 MB</p>
+        <a class="btn" href="descargas/PixelQuest_Windows.zip" download>⬇ DESCARGAR</a>
+        <ol>
+          <li>Descomprime el archivo (clic derecho → <b>Extraer todo</b>).</li>
+          <li>Abre <b>PixelQuest.exe</b>.</li>
+          <li>Si Windows avisa «Windows protegió su PC», pulsa <b>Más información → Ejecutar de todas formas</b>. Sale porque el juego es nuevo y aún no tiene firma digital.</li>
+        </ol>
+      </div>
+      <div class="desc-card pronto">
+        <div class="desc-ico">📱</div>
+        <h4 class="pixel">ANDROID</h4>
+        <p>Google Play · muy pronto</p>
+        <span class="btn sec desactivado">PRÓXIMAMENTE EN GOOGLE PLAY</span>
+        <ol>
+          <li>Mientras tanto puedes jugar en el celular desde esta misma página: pulsa <b>JUGAR</b> y gira el teléfono.</li>
+        </ol>
+      </div>
     </div>
   </div>
 </section>
@@ -218,7 +258,7 @@
 
 <footer>
   <div class="wrap">
-    <div class="pixel">PIXEL QUEST · VERSIÓN 40.0</div>
+    <div class="pixel">PIXEL QUEST · VERSIÓN 41.0</div>
     <p>Creado por El creador de Pixel Quest con ayuda de IA (Claude) · Hecho con Godot Engine</p>
   </div>
 </footer>
