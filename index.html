@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pixel Quest · La leyenda de Eldoria y el Eclipse</title>
+<meta name="description" content="Aventura de acción en pixel art. Explora Eldoria, vence a los guardianes y detén al Eclipse. Juega gratis en tu navegador.">
+<link rel="icon" href="img/icono.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --noche: #0c111e; --panel: #141c30; --panel2: #1b2540; --oro: #e8b94a; --oro2: #ffd866;
+    --crema: #ffe9a8; --texto: #e3ebf7; --gris: #9aa6b8; --rojo: #c0392b; --morado: #3b2a5c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--noche); color: var(--texto); font-family: "Nunito", system-ui, sans-serif; line-height: 1.6; }
+  img { image-rendering: pixelated; max-width: 100%; display: block; }
+  .pixel { font-family: "Press Start 2P", monospace; letter-spacing: 1px; }
+  .wrap { width: min(1120px, 92vw); margin: 0 auto; }
+
+  /* Barra superior */
+  nav { position: sticky; top: 0; z-index: 10; background: rgba(12,17,30,.92); border-bottom: 3px solid var(--oro); backdrop-filter: blur(4px); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { display: flex; align-items: center; gap: 12px; color: var(--crema); text-decoration: none; font-size: 14px; }
+  .logo img { width: 36px; height: 36px; }
+  nav ul { list-style: none; display: flex; gap: 26px; }
+  nav a.l { color: var(--texto); text-decoration: none; font-weight: 700; }
+  nav a.l:hover { color: var(--oro2); }
+
+  /* Botones */
+  .btn { display: inline-block; font-family: "Press Start 2P", monospace; font-size: 14px; text-decoration: none; cursor: pointer;
+         padding: 16px 26px; color: #2a1a06; background: var(--oro2); border: 4px solid #2a1a06;
+         box-shadow: 0 6px 0 #8a5a12, 0 6px 0 4px #2a1a06; transition: transform .08s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #8a5a12, 0 2px 0 4px #2a1a06; }
+  .btn.sec { background: var(--panel2); color: var(--crema); border-color: var(--oro); box-shadow: 0 6px 0 #0a0e18; }
+
+  /* Portada */
+  header.hero { position: relative; overflow: hidden; padding: 70px 0 90px;
+    background: linear-gradient(180deg, #1a1336 0%, #3b2a5c 55%, #a8606a 85%, #e3a66a 100%); }
+  header.hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 40px;
+    background: repeating-linear-gradient(90deg, #120d22 0 24px, #1a1330 24px 48px); }
+  .stars { position: absolute; inset: 0; background-image:
+      radial-gradient(2px 2px at 10% 20%, #fff 50%, transparent 51%), radial-gradient(2px 2px at 30% 8%, #fff 50%, transparent 51%),
+      radial-gradient(2px 2px at 55% 15%, #fff 50%, transparent 51%), radial-gradient(2px 2px at 78% 10%, #fff 50%, transparent 51%),
+      radial-gradient(2px 2px at 90% 30%, #fff 50%, transparent 51%), radial-gradient(2px 2px at 20% 40%, #fff 50%, transparent 51%);
+      opacity: .7; animation: tw 3s steps(2) infinite; }
+  @keyframes tw { 50% { opacity: .35; } }
+  .hero .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1.15fr; gap: 50px; align-items: center; }
+  .hero h1 { font-size: clamp(28px, 4.4vw, 52px); line-height: 1.25; color: var(--oro2);
+             text-shadow: 4px 4px 0 #8a5a12, 8px 8px 0 #1a1336; }
+  .hero h2 { margin-top: 18px; font-size: 13px; color: var(--crema); line-height: 1.8; }
+  .hero p { margin: 22px 0 32px; font-size: 18px; max-width: 470px; }
+  .hero .ctas { display: flex; gap: 22px; flex-wrap: wrap; }
+  .marco { border: 4px solid var(--oro); box-shadow: 0 0 0 4px #2a1a06, 10px 10px 0 4px rgba(0,0,0,.45); background: #000; }
+  .tags { margin-top: 28px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .tag { font-size: 13px; font-weight: 800; padding: 4px 12px; border: 2px solid var(--oro); color: var(--crema); background: rgba(12,17,30,.5); }
+
+  section { padding: 80px 0; }
+  .titulo { text-align: center; margin-bottom: 44px; }
+  .titulo h3 { font-size: clamp(18px, 2.4vw, 26px); color: var(--oro2); text-shadow: 3px 3px 0 #8a5a12; }
+  .titulo p { margin-top: 14px; color: var(--gris); font-size: 17px; }
+
+  /* Jugar */
+  #jugar { background: var(--panel); border-top: 4px solid var(--oro); border-bottom: 4px solid var(--oro); }
+  .pantalla { position: relative; aspect-ratio: 16 / 9; width: 100%; }
+  .pantalla iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .portada-juego { position: absolute; inset: 0; display: grid; place-items: center; cursor: pointer;
+                   background: center / cover no-repeat url("img/portada.png"); }
+  .portada-juego::before { content: ""; position: absolute; inset: 0; background: rgba(8,10,20,.45); }
+  .portada-juego .btn { position: relative; font-size: 18px; padding: 22px 34px; }
+  .bajo-juego { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-top: 18px; flex-wrap: wrap; color: var(--gris); }
+
+  /* Características */
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .card { background: var(--panel); border: 3px solid #2b3a63; transition: border-color .15s, transform .15s; }
+  .card:hover { border-color: var(--oro); transform: translateY(-4px); }
+  .card img { aspect-ratio: 16 / 9; object-fit: cover; width: 100%; border-bottom: 3px solid #2b3a63; }
+  .card div { padding: 18px 20px 22px; }
+  .card h4 { font-family: "Press Start 2P", monospace; font-size: 12px; color: var(--crema); margin-bottom: 10px; line-height: 1.6; }
+  .card p { font-size: 15.5px; }
+
+  /* Héroes */
+  .heroes { display: grid; grid-template-columns: 1.2fr 1fr; gap: 44px; align-items: center; }
+  .lista { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .lista div { background: var(--panel); border-left: 5px solid var(--c); padding: 10px 14px; }
+  .lista b { display: block; font-family: "Press Start 2P", monospace; font-size: 10px; color: var(--crema); margin-bottom: 4px; }
+  .lista span { font-size: 14px; color: var(--gris); }
+
+  /* Controles */
+  #controles { background: var(--panel); }
+  .teclas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .tecla { display: flex; align-items: center; gap: 14px; background: var(--noche); padding: 14px; border: 2px solid #2b3a63; }
+  kbd { font-family: "Press Start 2P", monospace; font-size: 11px; min-width: 52px; text-align: center; padding: 10px 8px;
+        background: var(--panel2); color: var(--crema); border: 2px solid var(--oro); box-shadow: 0 4px 0 #8a5a12; }
+
+  /* Celular */
+  .movil { display: grid; grid-template-columns: auto 1fr; gap: 30px; align-items: center; background: linear-gradient(90deg, var(--morado), var(--panel)); padding: 34px; border: 3px solid var(--oro); }
+  .movil .ico { font-size: 56px; }
+  .movil h4 { font-family: "Press Start 2P", monospace; font-size: 14px; color: var(--oro2); margin-bottom: 10px; }
+
+  footer { border-top: 4px solid var(--oro); padding: 36px 0; text-align: center; color: var(--gris); font-size: 14px; }
+  footer .pixel { color: var(--crema); font-size: 11px; margin-bottom: 12px; }
+
+  @media (max-width: 860px) {
+    .hero .wrap, .heroes { grid-template-columns: 1fr; }
+    .grid3 { grid-template-columns: 1fr 1fr; }
+    .teclas { grid-template-columns: 1fr 1fr; }
+    nav ul { display: none; }
+  }
+  @media (max-width: 560px) { .grid3 { grid-template-columns: 1fr; } .movil { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo pixel" href="#"><img src="img/icono.png" alt="">PIXEL QUEST</a>
+    <ul>
+      <li><a class="l" href="#jugar">Jugar</a></li>
+      <li><a class="l" href="#mundo">El mundo</a></li>
+      <li><a class="l" href="#heroes">Héroes</a></li>
+      <li><a class="l" href="#controles">Controles</a></li>
+    </ul>
+    <a class="btn" href="#jugar" style="font-size:11px;padding:10px 16px">JUGAR</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="stars"></div>
+  <div class="wrap">
+    <div>
+      <h1 class="pixel">PIXEL<br>QUEST</h1>
+      <h2 class="pixel">LA LEYENDA DE ELDORIA<br>Y EL ECLIPSE</h2>
+      <p>El Eclipse amenaza el reino y solo un héroe puede devolver la luz. Explora aldeas vivas, vence a los guardianes y conquista los reinos del cielo y del infierno.</p>
+      <div class="ctas">
+        <a class="btn" href="#jugar">▶ JUGAR GRATIS</a>
+        <a class="btn sec" href="#mundo">VER MÁS</a>
+      </div>
+      <div class="tags"><span class="tag">Gratis</span><span class="tag">En el navegador</span><span class="tag">8 héroes</span><span class="tag">PC y celular</span><span class="tag">En español</span></div>
+    </div>
+    <img class="marco" src="img/aldea.png" alt="Una aldea de Eldoria">
+  </div>
+</header>
+
+<section id="jugar">
+  <div class="wrap">
+    <div class="titulo"><h3 class="pixel">¡A JUGAR!</h3><p>Se juega aquí mismo, sin descargar nada: con teclado en el ordenador o con el dedo en el celular.</p></div>
+    <div class="pantalla marco" id="pantalla">
+      <div class="portada-juego" id="cargar"><span class="btn">▶ COMENZAR</span></div>
+    </div>
+    <div class="bajo-juego">
+      <span>Tu partida se guarda en este navegador (F5 dentro del juego).</span>
+      <button class="btn sec" id="completa" style="font-size:11px;padding:12px 18px">⛶ PANTALLA COMPLETA</button>
+    </div>
+  </div>
+</section>
+
+<section id="mundo">
+  <div class="wrap">
+    <div class="titulo"><h3 class="pixel">UN MUNDO POR EXPLORAR</h3><p>Biomas, mazmorras, castillos y tu propia mansión.</p></div>
+    <div class="grid3">
+      <div class="card"><img src="img/minijefe.png" alt=""><div><h4>MINI JEFES</h4><p>Cada bioma esconde un mini jefe con ataques únicos y un cofre de tesoro.</p></div></div>
+      <div class="card"><img src="img/templo.png" alt=""><div><h4>MAZMORRAS</h4><p>Tumbas, cabañas de bruja, salones de magma y templos de hielo.</p></div></div>
+      <div class="card"><img src="img/castillo.png" alt=""><div><h4>DOS REINOS</h4><p>Viaja al Reino Celestial y al Reino Infernal y conquista sus castillos.</p></div></div>
+      <div class="card"><img src="img/mansion.png" alt=""><div><h4>TU MANSIÓN</h4><p>Cómprala, decórala y mueve los muebles. Duerme, cocina y recibe visitas.</p></div></div>
+      <div class="card"><img src="img/jardin.png" alt=""><div><h4>JARDÍN Y PESCA</h4><p>Cultiva el huerto, pesca en el muelle y adopta una mascota.</p></div></div>
+      <div class="card"><img src="img/eclipse.png" alt=""><div><h4>EL ECLIPSE</h4><p>El combate final: lluvia de meteoros y una segunda fase temible.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="heroes">
+  <div class="wrap heroes">
+    <img class="marco" src="img/heroes.png" alt="Selección de héroe">
+    <div>
+      <div class="titulo" style="text-align:left;margin-bottom:24px"><h3 class="pixel">ELIGE A TU HÉROE</h3><p>Ocho personajes, ocho estilos de juego.</p></div>
+      <div class="lista">
+        <div style="--c:#3478b9"><b>GUARDIÁN</b><span>Escudo que bloquea todo</span></div>
+        <div style="--c:#3f965d"><b>EXPLORADORA</b><span>Lluvia de flechas</span></div>
+        <div style="--c:#8055c9"><b>ARQUIMAGO</b><span>Nova arcana</span></div>
+        <div style="--c:#b8753e"><b>DRUIDA</b><span>Cura y restaura maná</span></div>
+        <div style="--c:#bd5b50"><b>GUERRERO</b><span>Golpe sísmico</span></div>
+        <div style="--c:#6c73dc"><b>MAGO</b><span>Explosión elemental</span></div>
+        <div style="--c:#58a879"><b>ARQUERO</b><span>Triple disparo</span></div>
+        <div style="--c:#a16ac5"><b>ASESINO</b><span>Paso sombrío</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="controles">
+  <div class="wrap">
+    <div class="titulo"><h3 class="pixel">CONTROLES</h3><p>Pulsa F1 dentro del juego para ver el tutorial completo.</p></div>
+    <div class="teclas">
+      <div class="tecla"><kbd>←↑↓→</kbd>Moverse</div>
+      <div class="tecla"><kbd>ESP</kbd>Atacar</div>
+      <div class="tecla"><kbd>E</kbd>Hablar y abrir</div>
+      <div class="tecla"><kbd>B</kbd>Habilidad del héroe</div>
+      <div class="tecla"><kbd>QFGTR</kbd>Hechizos</div>
+      <div class="tecla"><kbd>ZXCV</kbd>Poderes de jefe</div>
+      <div class="tecla"><kbd>I J M</kbd>Mochila, misiones, mapa</div>
+      <div class="tecla"><kbd>F5</kbd>Guardar</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="movil">
+      <img class="marco" src="img/celular.png" alt="Controles táctiles" style="width:min(460px,100%)">
+      <div><h4>📱 JUEGA TAMBIÉN EN EL CELULAR</h4><p>Abre esta página en tu móvil, pulsa <b>JUGAR</b> y gira el celular en horizontal. Joystick a la izquierda para moverte; a la derecha ATACAR, USAR, tu habilidad, hechizos, poderes y pociones. Abajo, el menú, la bolsa, las misiones y el mapa.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="pixel">PIXEL QUEST · VERSIÓN 40.0</div>
+    <p>Creado por El creador de Pixel Quest con ayuda de IA (Claude) · Hecho con Godot Engine</p>
+  </div>
+</footer>
+
+<script>
+  // El juego solo se carga al pulsar COMENZAR, así la página abre rápido.
+  const pantalla = document.getElementById('pantalla');
+  const tactil = matchMedia('(pointer: coarse)').matches;
+  document.getElementById('cargar').addEventListener('click', () => {
+    // En el celular el juego se abre en su propia pantalla, más grande.
+    if (tactil) { location.href = 'jugar/index.html'; return; }
+    pantalla.innerHTML = '<iframe src="jugar/index.html" allow="fullscreen; autoplay" allowfullscreen></iframe>';
+    setTimeout(() => pantalla.querySelector('iframe').focus(), 400);
+  });
+  document.getElementById('completa').addEventListener('click', () => {
+    if (!pantalla.querySelector('iframe')) document.getElementById('cargar').click();
+    (pantalla.requestFullscreen || pantalla.webkitRequestFullscreen).call(pantalla);
+  });
+</script>
+</body>
+</html>
