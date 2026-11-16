@@ -119,11 +119,26 @@
   .btn.desactivado { cursor: default; opacity: .6; font-size: 11px; }
   .btn.desactivado:hover { transform: none; }
 
+  /* Apoya el juego */
+  #apoyar { background: linear-gradient(180deg, var(--panel) 0%, #2a1f45 100%); border-top: 4px solid var(--oro); }
+  .apoyo { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
+  .apoyo .texto p { font-size: 17px; margin-bottom: 16px; }
+  .apoyo .botones { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 26px; }
+  .btn.kofi { background: #ff5e5b; color: #fff; border-color: #2a1a06; box-shadow: 0 6px 0 #9c2f2d, 0 6px 0 4px #2a1a06; }
+  .apoyo .nota { margin-top: 18px; color: var(--gris); font-size: 14px; }
+  .metas { background: var(--noche); border: 3px solid var(--oro); padding: 26px; }
+  .metas h4 { font-family: "Press Start 2P", monospace; font-size: 12px; color: var(--oro2); margin-bottom: 18px; }
+  .metas ul { list-style: none; display: grid; gap: 14px; }
+  .metas li { display: flex; gap: 12px; align-items: flex-start; }
+  .metas li span:first-child { font-size: 22px; line-height: 1.2; }
+  .apoyo-mini { color: var(--crema); }
+  .apoyo-mini a { color: var(--oro2); font-weight: 800; }
+
   footer { border-top: 4px solid var(--oro); padding: 36px 0; text-align: center; color: var(--gris); font-size: 14px; }
   footer .pixel { color: var(--crema); font-size: 11px; margin-bottom: 12px; }
 
   @media (max-width: 860px) {
-    .hero .wrap, .heroes, .descargas { grid-template-columns: 1fr; }
+    .hero .wrap, .heroes, .descargas, .apoyo { grid-template-columns: 1fr; }
     .grid3 { grid-template-columns: 1fr 1fr; }
     .teclas { grid-template-columns: 1fr 1fr; }
     nav ul { display: none; }
@@ -142,6 +157,7 @@
       <li><a class="l" href="#mundo">El mundo</a></li>
       <li><a class="l" href="#heroes">Héroes</a></li>
       <li><a class="l" href="#controles">Controles</a></li>
+      <li><a class="l" href="#apoyar">❤ Apoyar</a></li>
     </ul>
     <a class="btn" href="#jugar" style="font-size:11px;padding:10px 16px">JUGAR</a>
   </div>
@@ -171,7 +187,7 @@
       <div class="portada-juego" id="cargar"><span class="btn">▶ COMENZAR</span></div>
     </div>
     <div class="bajo-juego">
-      <span>Tu partida se guarda en este navegador (F5 dentro del juego).</span>
+      <span>Tu partida se guarda en este navegador (F5 dentro del juego).<br><span class="apoyo-mini">¿Te está gustando? <a href="#apoyar">❤ Apoya el juego</a></span></span>
       <button class="btn sec" id="completa" style="font-size:11px;padding:12px 18px">⛶ PANTALLA COMPLETA</button>
     </div>
   </div>
@@ -276,6 +292,32 @@
   </div>
 </section>
 
+<section id="apoyar">
+  <div class="wrap">
+    <div class="titulo"><h3 class="pixel">❤ APOYA EL JUEGO</h3><p>Pixel Quest es y seguirá siendo gratis.</p></div>
+    <div class="apoyo">
+      <div class="texto">
+        <p>Hago Pixel Quest yo solo, versión tras versión, con ayuda de IA. Si te divertiste jugando y quieres que siga creciendo, puedes invitarme un café.</p>
+        <p>Cualquier aporte, por pequeño que sea, ayuda a sacar la siguiente versión. ¡Gracias por jugar!</p>
+        <div class="botones">
+          <a class="btn kofi" id="apoyo-kofi" href="#" target="_blank" rel="noopener">☕ INVITAME UN CAFE</a>
+          <a class="btn sec" id="apoyo-paypal" href="#" target="_blank" rel="noopener">💳 DONAR CON PAYPAL</a>
+        </div>
+        <p class="nota" id="apoyo-nota">Los pagos los gestionan Ko-fi y PayPal: esta página nunca ve tus datos.</p>
+      </div>
+      <div class="metas">
+        <h4>TU APOYO SE USA PARA…</h4>
+        <ul>
+          <li><span>📱</span><span><b>Publicar en Google Play</b>, para que se instale en cualquier Android.</span></li>
+          <li><span>🛡️</span><span><b>Firmar la versión de Windows</b>, para que deje de salir el aviso «Windows protegió su PC».</span></li>
+          <li><span>⚔️</span><span><b>Nuevas versiones</b>: más héroes, jefes, zonas y mascotas.</span></li>
+          <li><span>🌎</span><span><b>Traducir el juego</b> al inglés para que lo juegue más gente.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
     <div class="pixel">PIXEL QUEST · VERSIÓN 41.0</div>
@@ -284,6 +326,19 @@
 </footer>
 
 <script>
+  // ===== APOYA EL JUEGO · pega aquí tus enlaces =====
+  // Ejemplos: 'https://ko-fi.com/tuusuario'  y  'https://paypal.me/tuusuario'
+  // Si un enlace se deja vacío, su botón sale como «PRÓXIMAMENTE» y no hace nada.
+  const ENLACE_KOFI = 'https://ko-fi.com/martinrobles2412';
+  const ENLACE_PAYPAL = 'https://paypal.me/martin241223';
+  [['apoyo-kofi', ENLACE_KOFI], ['apoyo-paypal', ENLACE_PAYPAL]].forEach(([id, enlace]) => {
+    const b = document.getElementById(id);
+    if (enlace) { b.href = enlace; return; }
+    b.removeAttribute('href'); b.removeAttribute('target');
+    b.classList.add('desactivado');
+    b.textContent = b.textContent + ' · PRONTO';
+  });
+
   // El juego solo se carga al pulsar COMENZAR, así la página abre rápido.
   const pantalla = document.getElementById('pantalla');
   // Instalar como aplicación (PWA): sin descargar ningún .exe, sin avisos.
