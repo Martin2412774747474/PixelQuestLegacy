@@ -136,6 +136,9 @@
 
   footer { border-top: 4px solid var(--oro); padding: 36px 0; text-align: center; color: var(--gris); font-size: 14px; }
   footer .pixel { color: var(--crema); font-size: 11px; margin-bottom: 12px; }
+  footer .legal { margin-top: 10px; }
+  footer .legal a { color: var(--gris); text-decoration: underline; }
+  footer .legal a:hover { color: var(--oro2); }
 
   @media (max-width: 860px) {
     .hero .wrap, .heroes, .descargas, .apoyo { grid-template-columns: 1fr; }
@@ -145,7 +148,7 @@
   }
   @media (max-width: 560px) { .grid3 { grid-template-columns: 1fr; } .movil { grid-template-columns: 1fr; } }
 </style>
-<script data-goatcounter="https://pixelquestlegacy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script src="cookies.js" defer></script>
 </head>
 <body>
 
@@ -323,6 +326,7 @@
   <div class="wrap">
     <div class="pixel">PIXEL QUEST · VERSIÓN 43.0</div>
     <p>Creado por Martin2412 con ayuda de IA (Claude) · Hecho con Godot Engine</p>
+    <p class="legal"><a href="legal.html#privacidad">Privacidad</a> · <a href="legal.html#cookies">Cookies</a> · <a href="legal.html#terminos">Términos de uso</a> · <a href="#" id="config-cookies">Configurar cookies</a></p>
   </div>
 </footer>
 
@@ -338,6 +342,11 @@
     b.removeAttribute('href'); b.removeAttribute('target');
     b.classList.add('desactivado');
     b.textContent = b.textContent + ' · PRONTO';
+  });
+
+  document.getElementById('config-cookies').addEventListener('click', (e) => {
+    e.preventDefault();
+    if (window.PQCookies) PQCookies.abrir();
   });
 
   // El juego solo se carga al pulsar COMENZAR, así la página abre rápido.
